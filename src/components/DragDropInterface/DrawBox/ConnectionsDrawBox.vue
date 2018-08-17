@@ -9,7 +9,7 @@
                   fill="none"
                   stroke="skyblue"
                   strokeWidth="3"
-                  :key="connection.input.id+'-key'">
+                  :key="connection.input.id">
     </cubic-bezier>
     <cubic-bezier v-if="showHotConnection"
                   :start="hotConnection.output.position"

@@ -19,7 +19,7 @@
 <script>
     import {mapGetters, mapActions} from 'vuex';
     import {bus} from '../../main';
-    import Node from '../Node/Node.vue';
+    import Node from './Node/Node.vue';
     import DrawBox from './DrawBox/ConnectionsDrawBox';
     import NodePicker from './NodePicker/NodePicker';
     import MessageBox from './MessageBox/MessageBox';
@@ -51,9 +51,6 @@
         },
         methods: {
             ...mapActions([
-                'getNodeBlueprints',
-                'createNode',
-                'deleteNode',
                 'connect',
                 'disconnect',
             ]),

@@ -1,11 +1,14 @@
+import {blueprints} from '../../../nodeBehaviours/blueprints';
+import {behaviours} from '../../../nodeBehaviours/blueprints';
+
 export const mutations = {
     createInput(state, blueprint) {
         return {
-            label: blueprint.label,
             connectedOutput: null,
             node: null,
             position: {x: 0, y: 0},
             id: state.inputId++,
+            blueprint,
         };
     },
     deleteInput(state, input) {
@@ -15,11 +18,11 @@ export const mutations = {
     },
     createOutput(state, blueprint) {
         return {
-            label: blueprint.label,
             connectedInputs: [],
             node: null,
             position: {x: 0, y: 0},
             id: state.outputId++,
+            blueprint,
         };
     },
     deleteOutput(state, output) {
@@ -30,20 +33,19 @@ export const mutations = {
     },
     createFormElem(state, blueprint) {
         return {
-            label: blueprint.label,
-            type: blueprint.type,
-            data: null,
-            form: null,
             value: null,
             id: state.formElemId++,
+            blueprint,
         };
     },
     deleteFormElem(state, formElem) {
         let formElems = formElem.node.formElems;
         formElems.splice(formElems.indexOf(formElem), 1);
     },
-    createNode(state, blueprint) {
+    createNode(state, blueprintKey) {
+        let blueprint = blueprints[blueprintKey];
         let newNode = {};
+        newNode.blueprint = blueprint;
         let inputs = [];
         blueprint.inputs.map((inputBlueprint) => {
             let input = mutations.createInput(state, inputBlueprint);
@@ -64,25 +66,23 @@ export const mutations = {
             newFormElem.node = newNode;
             formElems.push(newFormElem);
         });
-        newNode.label = blueprint.label;
         newNode.inputs = inputs;
         newNode.outputs = outputs;
         newNode.formElems = formElems;
         newNode.position = {x: 0, y: 0};
         newNode.id = state.nodeId++;
+        newNode.value = null;
         state.nodes.push(newNode);
-
         return newNode;
     },
 
     deleteNode(state, node) {
-        console.log(node);
-        node.inputs.map(input => {
-            mutations.deleteInput(state, input);
-        });
-        node.outputs.map(output => {
-            mutations.deleteOutput(state, output);
-        });
+        while (node.inputs.length > 0) {
+            mutations.deleteInput(state, node.inputs[0]);
+        }
+        while (node.outputs.length > 0) {
+            mutations.deleteOutput(state, node.outputs[0]);
+        }
         while (node.formElems.length > 0) {
             mutations.deleteFormElem(state, node.formElems[0]);
         }
@@ -93,26 +93,30 @@ export const mutations = {
         input.connectedOutput = output;
         output.connectedInputs.push(input);
         state.connections.push({input: input, output: output});
+        mutations.updateState(state, input.node);
     },
 
     disconnect(state, input) {
+        mutations.updateState(state, input.node);
+        console.log(input.node);
         state.connections.splice(state.connections.findIndex(connection => {
             return connection.input === input;
         }), 1);
         if (input.connectedOutput != null) {
-            let output = input.connectedOutput;
-            output.connectedInputs.splice(output.connectedInputs.indexOf(input), 1);
+            let inputs = input.connectedOutput.connectedInputs;
+            inputs.splice(inputs.indexOf(input), 1);
             input.connectedOutput = null;
         }
     },
+    updateState(state, node) {
+        //update
+        node.value = null;
 
-    // moveNode(state, {node, newPosition}) {
-    //     node.position = newPosition;
-    // },
-    // updateFormElem(state, {formElem, value}) {
-    //     formElem.value = value;
-    // },
-    // evaluate(state, blueprint) {
-    //     blueprint.$data.evaluation = traceback;
-    // }
+        //spread the word
+        node.outputs.map(output => {
+            output.connectedInputs.map(({nextNode}) => {
+                mutations.updateState(nextNode);
+            });
+        })
+    }
 };

@@ -20,11 +20,11 @@
 </template>
 
 <script>
-  import IconPanel from '../../Form/IconPanel';
-  import IconClose from '../../Form/IconClose';
+  import IconPanel from '../../Shared/IconPanel';
+  import IconClose from '../../Shared/IconClose';
   import {bus} from '../../../main';
   import Message from './Message';
-  import Btn from '../../Form/Btn';
+  import Btn from '../../Shared/Btn';
 
   export default {
     data() {
