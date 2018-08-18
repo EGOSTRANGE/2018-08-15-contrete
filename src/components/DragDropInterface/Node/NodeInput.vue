@@ -4,7 +4,7 @@
         @click="OnClick"
         @mouseenter="OnMouseEnter"
         @mouseleave="OnMouseLeave">
-        <span>{{ input.label }}</span>
+        <span>{{ input.blueprint.label }}</span>
         <dot></dot>
         <transition name="right" appear>
             <div v-if="showScissors"
@@ -17,11 +17,11 @@
 </template>
 
 <script>
-    import {bus} from '../../main';
-    import IdTag from '../Misc/IdTag';
-    import StylButton from '../Form/Btn';
-    import IconScissors from '../Form/IconScissors';
-    import Dot from '../Misc/Dot'
+    import {bus} from '../../../main';
+    import IdTag from '../../Shared/Misc/IdTag';
+    import StylButton from '../../Shared/Btn';
+    import IconScissors from '../../Shared/IconScissors';
+    import Dot from '../../Shared/Misc/Dot'
 
     export default {
         props: ['input'],

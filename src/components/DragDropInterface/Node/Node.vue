@@ -6,7 +6,7 @@
              :style="{left: offset.x+'px', top: offset.y+'px'}">
             <div class="node-bar draggable-area"
                  @click.stop="DragDrop">
-                <span>{{ node.label }}</span>
+                <span>{{ node.blueprint.label }}</span>
                 <btn material="transparent"
                      @click.stop="Delete">
                     <icon-close class="small"></icon-close>
@@ -17,7 +17,8 @@
                     <ul>
                         <node-output v-for="output in node.outputs"
                                      :output="output"
-                                     :key="output.id">
+                                     :key="output.id"
+                                     @change.stop="Evaluate">
                         </node-output>
                     </ul>
                 </div>
@@ -25,7 +26,10 @@
                 <div v-if="node.formElems.length>0" class="node-form-area">
                     <ul>
                         <li v-for="formElem in node.formElems">
-                            <num-elem :form-elem="formElem" :key="formElem.id"></num-elem>
+                            <form-elem :form-elem="formElem"
+                                       :key="formElem.id"
+                                       @change="Update">
+                            </form-elem>
                         </li>
                     </ul>
                 </div>
@@ -39,10 +43,6 @@
                     </ul>
                 </div>
             </div>
-            <!--BALACLAVA-->
-            <div>{{evaluation}}
-                <button @click.stop="Evaluate">Result</button>
-            </div>
         </div>
     </transition>
 </template>
@@ -51,10 +51,10 @@
     import {mapActions} from 'vuex';
     import NodeInput from './NodeInput';
     import NodeOutput from './NodeOutput';
-    import Btn from '../Form/Btn';
-    import Spiner from '../Misc/Spiner';
-    import IconClose from '../Form/IconClose';
-    import NumElem from '../Form/NumElem';
+    import Btn from '../../Shared/Btn';
+    import Spiner from '../../Shared/Misc/Spiner';
+    import IconClose from '../../Shared/IconClose';
+    import FormElem from './FormElems/FormElem';
 
     export default {
         props: ['node', 'mousePosition'],
@@ -69,9 +69,10 @@
             };
         },
         methods: {
-            ...mapActions(['evaluate', 'deleteNode']),
-            Evaluate() {
-                this.evaluate({node: this.node, vueNode: this});
+            ...mapActions(['update', 'deleteNode']),
+            Update() {
+                console.log(this.node);
+                this.update(this.node);
             },
             DragDrop(event) {
                 let rect = this.$el.getBoundingClientRect();
@@ -113,10 +114,10 @@
         components: {
             NodeInput,
             NodeOutput,
+            FormElem,
             Btn,
             Spiner,
             IconClose,
-            NumElem
         },
         mounted() {
             this.dragOffset.x = 15;

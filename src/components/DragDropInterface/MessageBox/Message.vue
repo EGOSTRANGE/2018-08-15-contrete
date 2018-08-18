@@ -17,8 +17,8 @@
 </template>
 
 <script>
-  import Btn from '../../Form/Btn';
-  import IconClose from '../../Form/IconClose';
+  import Btn from '../../Shared/Btn';
+  import IconClose from '../../Shared/IconClose';
 
   export default {
     props: ['message'],

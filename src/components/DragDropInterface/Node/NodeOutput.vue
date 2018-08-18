@@ -3,15 +3,15 @@
       @click.stop="OnClick"
       @mouseenter="OnMouseEnter"
       @mouseleave="OnMouseLeave">
-    <span>{{ output.label }}</span>
+    <span>{{ output.blueprint.label }}</span>
     <dot></dot>
   </li>
 </template>
 
 <script>
 
-  import {bus} from '../../main';
-  import Dot from '../Misc/Dot';
+  import {bus} from '../../../main';
+  import Dot from '../../Shared/Misc/Dot';
 
   export default {
     props: ['output'],

@@ -1,7 +1,7 @@
 <template>
     <div class="node-picker"
          :class="{unfolded:unfolded}">
-        <styl-button material="transparent"
+        <styl-button v-if="!unfolded" material="transparent"
                      @click.stop="unfolded=true">
             <icon-burger></icon-burger>
         </styl-button>
@@ -12,71 +12,35 @@
                     <icon-close class="small"></icon-close>
                 </styl-button>
             </div>
-            <styl-button v-for="(blueprint, key) in blueprints"
-                         @click.stop="PickNode(key)"
+            <styl-button v-for="(blueprint,key) in blueprints"
+                         @click.stop="PickNode(blueprint)"
                          :key="key">
                 {{ blueprint.label }}
             </styl-button>
         </div>
-        <!--<transition name="left" appear="">-->
-        <!--<spiner v-if="!blueprintsUpdated"></spiner>-->
-        <!--</transition>-->
     </div>
 </template>
 
 <script>
+    import blueprints from '../../../nodeBehaviours/blueprints';
     import {bus} from '../../../main';
-    import StylButton from '../../Form/Btn';
-    import IconClose from '../../Form/IconClose';
-    import IconBurger from '../../Form/IconBurger';
-    import Spiner from '../../Misc/Spiner';
-    // import {mapGetters} from 'vuex';
+    import StylButton from '../../Shared/Btn';
+    import IconClose from '../../Shared/IconClose';
+    import IconBurger from '../../Shared/IconBurger';
+    import Spiner from '../../Shared/Misc/Spiner';
     import {mapActions} from 'vuex';
 
     export default {
         data() {
             return {
-                blueprints: {
-                    num: {
-                        label: 'Number',
-                        inputs: [],
-                        outputs: [{
-                            label: 'out',
-                        }],
-                        formElems: [
-                            {
-                                label: 'Number',
-                                type: 'Num',
-                            }
-                        ],
-                    },
-                    sum: {
-                        label: 'Sum',
-                        inputs: [
-                            {
-                                label: 'A',
-                            },
-                            {
-                                label: 'B'
-                            }
-                        ],
-                        outputs: [
-                            {
-                                label: 'out',
-                            }
-                        ],
-                        formElems: [],
-                    },
-                },
+                blueprints: blueprints,
                 unfolded: true,
             }
         },
         methods: {
             ...mapActions(['createNode']),
-            PickNode(key) {
-                console.log(key);
-                console.log(this.blueprints[key]);
-                this.createNode(this.blueprints[key]);
+            PickNode(blueprint) {
+                this.createNode(blueprint);
             },
         },
         components: {

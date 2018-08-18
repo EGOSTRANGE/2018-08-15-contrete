@@ -1,13 +1,4 @@
-export const behaviours = {
-    add: (inputs, outputs, formElems, outputIndex) => {
-        return inputs[0].evaluate() + outputs.evaluate();
-    },
-    num: ({formElems}) => {
-        return formElems[0].value;
-    },
-};
-
-export const blueprints = {
+export default {
     num: {
         label: 'Number',
         inputs: [],
@@ -20,16 +11,16 @@ export const blueprints = {
                 type: 'Num',
             }
         ],
-        evaluation:'num',
+        evaluator: 'num',
     },
     sum: {
         label: 'Sum',
         inputs: [
             {
-                label: 'A',
+                label: 'in a',
             },
             {
-                label: 'B'
+                label: 'in b'
             }
         ],
         outputs: [
@@ -38,6 +29,18 @@ export const blueprints = {
             }
         ],
         formElems: [],
-        evaluation:'add',
+        evaluator: 'add',
+    },
+    eval: {
+        label: 'Evaluation',
+        inputs: [{label: 'in'}],
+        outputs: [],
+        formElems: [
+            {
+                label: 'Eval',
+                type: 'eval',
+            }
+        ],
+        evaluator: 'eval',
     },
 };
