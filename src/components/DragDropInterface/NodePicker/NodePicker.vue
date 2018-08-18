@@ -13,7 +13,7 @@
                 </styl-button>
             </div>
             <styl-button v-for="(blueprint,key) in blueprints"
-                         @click.stop="PickNode(key)"
+                         @click.stop="PickNode(blueprint)"
                          :key="key">
                 {{ blueprint.label }}
             </styl-button>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import {blueprints} from '../../../nodeBehaviours/blueprints';
+    import blueprints from '../../../nodeBehaviours/blueprints';
     import {bus} from '../../../main';
     import StylButton from '../../Shared/Btn';
     import IconClose from '../../Shared/IconClose';
@@ -39,12 +39,9 @@
         },
         methods: {
             ...mapActions(['createNode']),
-            PickNode(key) {
-                this.createNode(key);
+            PickNode(blueprint) {
+                this.createNode(blueprint);
             },
-        },
-        beforeMount() {
-            console.log(blueprints + 'en el NodePicker');
         },
         components: {
             StylButton,

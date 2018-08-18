@@ -12,6 +12,12 @@
                 val: 0,
             };
         },
+        methods: {
+            Change(event) {
+                console.log('Changing');
+                this.$emit('change', event);
+            },
+        },
         beforeMount() {
             this.formElem.value = 0;
         }

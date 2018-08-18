@@ -34,6 +34,12 @@
         margin: 5px 0;
         position: relative;
     }
+    .mono-field:first-child{
+        margin:0 0 5px 0
+    }
+    .mono-field:first-child{
+        margin:5px 0 0 0
+    }
 
     input {
         border-radius: 3px;

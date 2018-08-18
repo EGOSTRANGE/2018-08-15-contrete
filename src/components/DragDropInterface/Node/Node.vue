@@ -17,7 +17,8 @@
                     <ul>
                         <node-output v-for="output in node.outputs"
                                      :output="output"
-                                     :key="output.id">
+                                     :key="output.id"
+                                     @change.stop="Evaluate">
                         </node-output>
                     </ul>
                 </div>
@@ -25,7 +26,10 @@
                 <div v-if="node.formElems.length>0" class="node-form-area">
                     <ul>
                         <li v-for="formElem in node.formElems">
-                            <form-elem :form-elem="formElem" :key="formElem.id"></form-elem>
+                            <form-elem :form-elem="formElem"
+                                       :key="formElem.id"
+                                       @change="Update">
+                            </form-elem>
                         </li>
                     </ul>
                 </div>
@@ -65,9 +69,10 @@
             };
         },
         methods: {
-            ...mapActions(['evaluate', 'deleteNode']),
-            Evaluate() {
-                this.evaluate(this.node);
+            ...mapActions(['update', 'deleteNode']),
+            Update() {
+                console.log(this.node);
+                this.update(this.node);
             },
             DragDrop(event) {
                 let rect = this.$el.getBoundingClientRect();

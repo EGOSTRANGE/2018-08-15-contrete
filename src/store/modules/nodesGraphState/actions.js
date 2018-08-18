@@ -1,4 +1,4 @@
-import {behaviours} from '../../../nodeBehaviours/blueprints';
+import behaviours from '../../../nodeBehaviours/behaviours';
 
 export const actions = {
     createNode({commit}, blueprintKey) {
@@ -19,4 +19,7 @@ export const actions = {
     evaluate({commit}, node) {
         behaviours.node(node);
     },
+    update({commit}, node) {
+        commit('update', node);
+    }
 };

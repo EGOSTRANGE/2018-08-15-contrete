@@ -1,9 +1,10 @@
 <template>
-    <div class="mono-field">
-        <component v-if="formElem.node.value!=null"
-                   :is="formElem.node.value.type+'Eval'"></component>
-        {{formElem.node.value}}
-        <btn @click.stop="Evaluate">Evaluate</btn>
+    <div>
+    <component v-if="formElem.node.value!=null"
+               :is="formElem.node.value.type+'Eval'"
+               :value="formElem.node.value.value"></component>
+        <br>
+        <btn @click.stop="Evaluate">Evaluar</btn>
     </div>
 </template>
 
@@ -11,6 +12,9 @@
     import {bus} from '../../../../main';
     import Btn from '../../../Shared/Btn';
     import {mapActions} from 'vuex';
+    import TextEval from './EvalElems/TextEval';
+    import NumEval from './EvalElems/TextEval';
+    import Spiner from '../../../Shared/Misc/Spiner';
 
     export default {
         props: ['formElem'],
@@ -31,7 +35,10 @@
             }
         },
         components: {
-            Btn
+            Btn,
+            TextEval,
+            NumEval,
+            Spiner,
         }
     }
 </script>

@@ -1,6 +1,3 @@
-import {blueprints} from '../../../nodeBehaviours/blueprints';
-import {behaviours} from '../../../nodeBehaviours/blueprints';
-
 export const mutations = {
     createInput(state, blueprint) {
         return {
@@ -11,11 +8,13 @@ export const mutations = {
             blueprint,
         };
     },
+
     deleteInput(state, input) {
         mutations.disconnect(state, input);
         let inputs = input.node.inputs;
         inputs.splice(inputs.indexOf(input), 1);
     },
+
     createOutput(state, blueprint) {
         return {
             connectedInputs: [],
@@ -25,6 +24,7 @@ export const mutations = {
             blueprint,
         };
     },
+
     deleteOutput(state, output) {
         while (output.connectedInputs.length > 0)
             mutations.disconnect(state, output.connectedInputs[0]);
@@ -42,8 +42,7 @@ export const mutations = {
         let formElems = formElem.node.formElems;
         formElems.splice(formElems.indexOf(formElem), 1);
     },
-    createNode(state, blueprintKey) {
-        let blueprint = blueprints[blueprintKey];
+    createNode(state, blueprint) {
         let newNode = {};
         newNode.blueprint = blueprint;
         let inputs = [];
@@ -86,19 +85,17 @@ export const mutations = {
         while (node.formElems.length > 0) {
             mutations.deleteFormElem(state, node.formElems[0]);
         }
-        state.nodes.splice(state.nodes.indexOf(node), 1);
+        state.nodes = state.nodes.filter(n => node.id !== n.id);
     },
 
     connect(state, {input, output}) {
         input.connectedOutput = output;
         output.connectedInputs.push(input);
         state.connections.push({input: input, output: output});
-        mutations.updateState(state, input.node);
+        mutations.update(state, input.node);
     },
 
     disconnect(state, input) {
-        mutations.updateState(state, input.node);
-        console.log(input.node);
         state.connections.splice(state.connections.findIndex(connection => {
             return connection.input === input;
         }), 1);
@@ -107,16 +104,19 @@ export const mutations = {
             inputs.splice(inputs.indexOf(input), 1);
             input.connectedOutput = null;
         }
+        mutations.update(state, input.node);
     },
-    updateState(state, node) {
-        //update
-        node.value = null;
 
-        //spread the word
-        node.outputs.map(output => {
-            output.connectedInputs.map(({nextNode}) => {
-                mutations.updateState(nextNode);
+    update(state, node) {
+        if (node.value) {
+            //update
+            node.value = null;
+            //spread the word
+            node.outputs.map(output => {
+                output.connectedInputs.forEach(nextInput => {
+                    mutations.update(state, nextInput.node);
+                });
             });
-        })
+        }
     }
 };
