@@ -1,4 +1,18 @@
 export default {
+    load: {
+        label: 'Load',
+        inputs: [],
+        outputs: [{
+            label: 'out',
+        }],
+        formElems: [
+            {
+                label: 'FileAddress',
+                type: 'file',
+            }
+        ],
+        evaluator: 'table',
+    },
     num: {
         label: 'Number',
         inputs: [],
@@ -37,7 +51,7 @@ export default {
         outputs: [],
         formElems: [
             {
-                label: 'Eval',
+                label: 'preview...',
                 type: 'eval',
             }
         ],

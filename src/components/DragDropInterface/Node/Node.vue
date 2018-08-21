@@ -43,6 +43,7 @@
                     </ul>
                 </div>
             </div>
+            {{node.state}}
         </div>
     </transition>
 </template>

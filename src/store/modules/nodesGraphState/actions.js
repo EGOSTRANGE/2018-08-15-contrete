@@ -1,6 +1,9 @@
-import behaviours from '../../../nodeBehaviours/behaviours';
+import {resolveNode} from '../../../nodeBehaviours/behaviours';
 
 export const actions = {
+    updateFormElem({commit}, e){
+        commit('updateFormElem', e);
+    },
     createNode({commit}, blueprintKey) {
         commit('createNode', blueprintKey);
     },
@@ -13,13 +16,7 @@ export const actions = {
     disconnect({commit}, input) {
         commit('disconnect', input);
     },
-    moveNode({commit}, event) {
-        commit('moveNode', event);
+    moveNode({commit}, e) {
+        commit('moveNode', e);
     },
-    evaluate({commit}, node) {
-        behaviours.node(node);
-    },
-    update({commit}, node) {
-        commit('update', node);
-    }
 };

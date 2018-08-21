@@ -1,29 +1,45 @@
 import evaluators from "./evaluators";
 
-const behaviours = {
-    input: (input) => {
-        return behaviours.output(input.connectedOutput);
-    },
-    output: (output) => {
-        let index = output.node.outputs.indexOf(output);
-        return behaviours.node(output.node, index);
-    },
-    formElem: (formElem) => {
+export const resolveNode = (node, outputIndex) => {
+    if (node.value)
+        return new Promise((success, fail) => {
+            success(node.value);
+            fail();
+        });
+
+    node.prompt = '';
+
+    let inputsEvaluations = [];
+    let crash = false;
+    for (let i = 0; i < node.inputs.length; i++) {
+        let input = node.inputs[i];
+        if (input.connectedOutput) {
+            let nextOutput = input.connectedOutput;
+            let nextOutputIndex = nextOutput.node.outputs.indexOf(nextOutput);
+            inputsEvaluations.push(resolveNode(nextOutput.node, nextOutputIndex));
+        }
+        else {
+            crash = true;
+            break;
+        }
+    }
+
+    if (crash) return new Promise((success, fail) => {
+        fail();
+    });
+
+    let formElemsValues = node.formElems.map(formElem => {
         return formElem.value;
-    },
-    node: (node, outputIndex) => {
-        if (node.value)
-            return node.value;
+    });
 
-        let inputsEvaluations = node.inputs.map(input => {
-            return behaviours.input(input);
+    Promise.all(inputsEvaluations).then(() => {
+        return new Promise((success, fail) => {
+            let evalFnc = evaluators[node.blueprint.evaluator];
+            let promise=evalFnc(inputsEvaluations,formElemsValues,outputIndex);
+            promise.then(result=>{node.prompt = 'Yay!';
+                node.value = result;
+                success(node.value);
+            })
         });
-
-        let formElemsValues = node.formElems.map(formElem => {
-            return formElem.value;
-        });
-        node.value = evaluators[node.blueprint.evaluator](inputsEvaluations, formElemsValues, outputIndex);
-        return node.value;
-    },
+    });
 };
-export default behaviours;

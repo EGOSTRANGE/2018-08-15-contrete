@@ -11,7 +11,9 @@
 
 <script>
     import NumElem from './NumElem';
-    import EvalElem from './EvalElem';
+    import EvalElem from './EvalElems/EvalElem';
+    import TextElem from './TextElem';
+    import FileElem from './FileElem';
 
     export default {
         props: ['formElem'],
@@ -23,6 +25,8 @@
         components: {
             NumElem,
             EvalElem,
+            TextElem,
+            FileElem,
         }
     }
 </script>
@@ -34,11 +38,13 @@
         margin: 5px 0;
         position: relative;
     }
-    .mono-field:first-child{
-        margin:0 0 5px 0
+
+    .mono-field:first-child {
+        margin: 0 0 5px 0
     }
-    .mono-field:first-child{
-        margin:5px 0 0 0
+
+    .mono-field:first-child {
+        margin: 5px 0 0 0
     }
 
     input {

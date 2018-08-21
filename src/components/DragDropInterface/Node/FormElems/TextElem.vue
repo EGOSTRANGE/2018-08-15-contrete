@@ -1,5 +1,5 @@
 <template>
-    <input type="number"
+    <input type="text"
            :id="'form-elem-'+formElem.id+'-in-node-'+formElem.node.id"
            v-model="formElem.value"
            @change="Change">
@@ -10,10 +10,10 @@
 
     export default {
         props: ['formElem'],
-        mixins: [FormElemMixin],
         beforeMount() {
-            this.formElem.value = 0;
+            this.formElem.value = '';
         },
+        mixins:[FormElemMixin]
     }
 </script>
 

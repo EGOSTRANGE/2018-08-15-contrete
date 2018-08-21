@@ -3,15 +3,16 @@
         <table>
             <thead>
             <tr>
-                <th v-for="(header,key) in value[0]">{{key}}</th>
+                <th v-for="header in value[0]">{{header}}</th>
             </tr>
             </thead>
-            <tbody>
-            <tr v-for="row in value">
-                <th v-for="cell in row">{{cell}}</th>
-            </tr>
-            </tbody>
+            <!--<tbody>-->
+            <!--<tr v-for="row in value">-->
+            <!--<th v-for="cell in row">{{cell}}</th>-->
+            <!--</tr>-->
+            <!--</tbody>-->
         </table>
+
     </div>
 </template>
 
@@ -27,6 +28,9 @@
                     "3": {"alpha": 4, "beta": "cuatro", "gamma": "arisen"}
                 },
             };
+        },
+        mounted() {
+            console.log(this.value);
         }
     }
 </script>

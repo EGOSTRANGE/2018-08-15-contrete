@@ -1,20 +1,21 @@
 <template>
     <div>
-    <component v-if="formElem.node.value!=null"
-               :is="formElem.node.value.type+'Eval'"
-               :value="formElem.node.value.value"></component>
-        <br>
-        <btn @click.stop="Evaluate">Evaluar</btn>
+        <component v-if="formElem.node.value!=null"
+                   :is="formElem.node.value.type+'Eval'"
+                   :value="formElem.node.value.value"></component>
+        <!--<br>-->
+        <!--<btn @click.stop="Evaluate">Evaluar</btn>-->
     </div>
 </template>
 
 <script>
-    import {bus} from '../../../../main';
-    import Btn from '../../../Shared/Btn';
+    import {bus} from '../../../../../main';
+    import Btn from '../../../../Shared/Btn';
     import {mapActions} from 'vuex';
-    import TextEval from './EvalElems/TextEval';
-    import NumEval from './EvalElems/TextEval';
-    import Spiner from '../../../Shared/Misc/Spiner';
+    import TextEval from './EvalSubelements/TextEval';
+    import NumEval from './EvalSubelements/TextEval';
+    import TableEval from './EvalSubelements/TableEval';
+    import Spiner from '../../../../Shared/Misc/Spiner';
 
     export default {
         props: ['formElem'],
@@ -27,17 +28,11 @@
                     this.formElem.node.value.type.substring(1), 'Elem');
             }
         },
-        methods: {
-            ...mapActions(['evaluate']),
-            Evaluate() {
-                console.log(this.formElem.node);
-                this.evaluate(this.formElem.node);
-            }
-        },
         components: {
             Btn,
             TextEval,
             NumEval,
+            TableEval,
             Spiner,
         }
     }

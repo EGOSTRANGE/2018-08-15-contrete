@@ -1,31 +1,45 @@
 import DataFrame from "dataframe-js";
-
-// From a collection (easier)
-const df = new DataFrame([
-    {c1: 1, c2: 6}, // <------- A row
-    {c4: 1, c3: 2}
-], ['c1', 'c2', 'c3', 'c4']);
+import * as d3 from "d3";
 
 export default {
-    add: (inputsEvaluations, formElemsValues, outputIndex) => {
-        df.show(3);
-        return {
-            type: 'num',
-            value: inputsEvaluations[0].value + inputsEvaluations[1].value,
-        };
+    table: (inputsEvaluations, formElemsValues, node, outputIndex, success, fail) => {
+        node.state = 'wait';
+        DataFrame.fromCSV(formElemsValues[0]).then(df => {
+            node.value = {
+                type: 'table',
+                value: df,
+            };
+            df.show(5);
+            node.state = 'ok';
+            success();
+        }).catch(() => {
+            node.state = 'fail';
+            fail();
+        });
     },
-    num: (inputsEvaluations, formElemsValues, outputIndex) => {
-        console.log(formElemsValues[0]);
-        return {
+    add: (inputsEvaluations, formElemsValues, node, outputIndex, success, fail) => {
+        //TODO: EVALUAR EL TIPO DE LOS INPUTS Y ACTUAL DE ACUERDO A LO PERCIBIDO
+        node.value = {
+            type: 'num',
+            value: inputsEvaluations[0].value + inputsEvaluations[1].value
+        };
+        node.state = 'ok';
+        success();
+    },
+    num: (inputsEvaluations, formElemsValues, node, outputIndex, success, fail) => {
+        node.value = {
             type: 'num',
             value: Number.parseFloat(formElemsValues[0]),
         };
+        node.state = 'ok';
+        success();
     },
-    eval: (inputsEvaluations, formElemsValues, outputIndex) => {
-        console.log(inputsEvaluations);
-        return {
-            type: 'num',
+    eval: (inputsEvaluations, formElemsValues, node, outputIndex, success, fail) => {
+        node.value = {
+            type: inputsEvaluations[0].type,
             value: inputsEvaluations[0].value,
         };
+        node.state = 'ok';
+        success();
     },
-};
+}
