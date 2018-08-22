@@ -141,6 +141,7 @@ export const mutations = {
         let ev = evaluators[node.blueprint.evaluator];
 
         let success = () => {
+            console.log(node.value);
             node.outputs.map(output => {
                 if (output.connectedInputs.length > 0)
                     output.connectedInputs.map(input => {
@@ -167,8 +168,8 @@ export const mutations = {
             });
         }
     },
-    updateFormElem(state, {formElem, newValue}) {
-        formElem.value = newValue;
+    updateFormElem(state, {formElem, value}) {
+        formElem.value = value;
         mutations.setDirty(state, formElem.node);
         mutations.evaluate(state, formElem.node);
     },

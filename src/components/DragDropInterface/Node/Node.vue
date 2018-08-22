@@ -17,8 +17,7 @@
                     <ul>
                         <node-output v-for="output in node.outputs"
                                      :output="output"
-                                     :key="output.id"
-                                     @change.stop="Evaluate">
+                                     :key="output.id">
                         </node-output>
                     </ul>
                 </div>
@@ -27,8 +26,7 @@
                     <ul>
                         <li v-for="formElem in node.formElems">
                             <form-elem :form-elem="formElem"
-                                       :key="formElem.id"
-                                       @change="Update">
+                                       :key="formElem.id">
                             </form-elem>
                         </li>
                     </ul>

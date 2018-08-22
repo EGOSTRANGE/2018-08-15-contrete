@@ -1,21 +1,43 @@
-import DataFrame from "dataframe-js";
-import * as d3 from "d3";
+import XLSX from 'xlsx/xlsx';
+import Sheet2JSONOpt from 'xlsx/xlsx';
 
 export default {
     table: (inputsEvaluations, formElemsValues, node, outputIndex, success, fail) => {
-        node.state = 'wait';
-        DataFrame.fromCSV(formElemsValues[0]).then(df => {
-            node.value = {
-                type: 'table',
-                value: df,
-            };
-            df.show(5);
-            node.state = 'ok';
-            success();
-        }).catch(() => {
-            node.state = 'fail';
+        if (!formElemsValues[0]) {
             fail();
-        });
+            return;
+        }
+        let reader = new FileReader();
+        reader.onload = () => {
+            let fileData = reader.result;
+            let wb = XLSX.read(fileData, {type: 'binary'});
+            let sheets = [];
+            wb.SheetNames.forEach(function (sheetName) {
+                let rowObj = XLSX.utils.sheet_to_json(wb.Sheets[sheetName]);
+                let header = [];
+                let rows = [];
+
+                for (let prop in rowObj[0])
+                    header.push(prop);
+
+                rowObj.map(elem => {
+                    let row = [];
+                    for (let prop in elem) {
+                        row.push(elem[prop]);
+                    }
+                    rows.push(row);
+                });
+                sheets.push({header, rows});
+            });
+            node.state = 'ok';
+            node.value = {type: 'table', value: sheets[0]};
+            success();
+        };
+        reader.onerror = () => {
+            fail();
+        };
+        node.state = 'wait';
+        reader.readAsBinaryString(formElemsValues[0]);
     },
     add: (inputsEvaluations, formElemsValues, node, outputIndex, success, fail) => {
         //TODO: EVALUAR EL TIPO DE LOS INPUTS Y ACTUAL DE ACUERDO A LO PERCIBIDO

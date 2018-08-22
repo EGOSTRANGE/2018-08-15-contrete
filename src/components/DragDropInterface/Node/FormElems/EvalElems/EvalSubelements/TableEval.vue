@@ -3,14 +3,14 @@
         <table>
             <thead>
             <tr>
-                <th v-for="header in value[0]">{{header}}</th>
+                <th v-for="header in value.header">{{header}}</th>
             </tr>
             </thead>
-            <!--<tbody>-->
-            <!--<tr v-for="row in value">-->
-            <!--<th v-for="cell in row">{{cell}}</th>-->
-            <!--</tr>-->
-            <!--</tbody>-->
+            <tbody>
+            <tr v-for="row in value.rows">
+                <th v-for="cell in row">{{cell}}</th>
+            </tr>
+            </tbody>
         </table>
 
     </div>
@@ -72,10 +72,12 @@
 
     tbody th:nth-child(even) {
         background: lightgray;
+        border-bottom: 1px solid darkgray;
     }
 
     tbody th:nth-child(odd) {
         background: darkgray;
+        border-bottom: 1px solid lightgray;
     }
 
     tbody th {

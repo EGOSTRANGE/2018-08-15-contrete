@@ -7,21 +7,15 @@
 
 <script>
     import {mapActions} from 'vuex';
+    import XLSX from 'xlsx/xlsx';
 
     export default {
         props: ['formElem'],
         methods: {
             ...mapActions(['updateFormElem']),
             Change(e) {
-                console.log(e.target.value);
-                this.updateFormElem({
-                    formElem: this.formElem,
-                    newValue: e.target.files.item(0)
-                });
+                this.updateFormElem({formElem: this.formElem, value: e.target.files[0]});
             },
-        },
-        beforeMount() {
-            this.formElem.value = '';
         },
     }
 </script>
