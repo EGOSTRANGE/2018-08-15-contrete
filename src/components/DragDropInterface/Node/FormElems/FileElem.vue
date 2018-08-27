@@ -6,17 +6,13 @@
 </template>
 
 <script>
-    import {mapActions} from 'vuex';
-    import XLSX from 'xlsx/xlsx';
-
     export default {
         props: ['formElem'],
         methods: {
-            ...mapActions(['updateFormElem']),
             Change(e) {
-                this.updateFormElem({formElem: this.formElem, value: e.target.files[0]});
-            },
-        },
+                this.$emit('change', e.target.files[0]);
+            }
+        }
     }
 </script>
 

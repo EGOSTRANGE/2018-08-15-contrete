@@ -10,9 +10,6 @@
 
     export default {
         props: ['formElem'],
-        beforeMount() {
-            this.formElem.value = '';
-        },
         mixins:[FormElemMixin]
     }
 </script>

@@ -1,14 +1,11 @@
-import {mapActions} from 'vuex';
+// import {mapActions} from 'vuex';
 
 export default {
+    props: ['formElem','index'],
     methods: {
-        ...mapActions(['updateFormElem']),
         Change(e) {
-            console.log(e.target.value);
-            this.updateFormElem({
-                formElem: this.formElem,
-                newValue: e.target.value,
-            });
-        }
-    }
+            console.log('login value of input: ' + e.target.value);
+            this.$emit('change', e.target.value);
+        },
+    },
 };

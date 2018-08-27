@@ -1,7 +1,10 @@
 import {resolveNode} from '../../../nodeBehaviours/behaviours';
 
 export const actions = {
-    updateFormElem({commit}, e){
+    initFormElem({commit}, e) {
+        commit('initFormElem', e);
+    },
+    updateFormElem({commit}, e) {
         commit('updateFormElem', e);
     },
     createNode({commit}, blueprintKey) {

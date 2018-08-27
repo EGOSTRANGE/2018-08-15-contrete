@@ -3,11 +3,11 @@
         <table>
             <thead>
             <tr>
-                <th v-for="header in value.header">{{header}}</th>
+                <th v-for="header in value.headers">{{header}}</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="row in value.rows">
+            <tr v-for="row in value.body">
                 <th v-for="cell in row">{{cell}}</th>
             </tr>
             </tbody>
@@ -19,19 +19,6 @@
 <script>
     export default {
         props: ['value'],
-        data() {
-            return {
-                table: {
-                    "0": {"alpha": 1, "beta": "uno", "gamma": "balaclava"},
-                    "1": {"alpha": 2, "beta": "due", "gamma": "rice"},
-                    "2": {"alpha": 3, "beta": "tre", "gamma": "rise"},
-                    "3": {"alpha": 4, "beta": "cuatro", "gamma": "arisen"}
-                },
-            };
-        },
-        mounted() {
-            console.log(this.value);
-        }
     }
 </script>
 
@@ -47,6 +34,7 @@
         position: relative;
         border-spacing: 0;
         font-weight: normal !important;
+        font-size: small;
     }
 
     thead th {

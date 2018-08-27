@@ -1,58 +1,88 @@
 export default {
+    merge: {
+        label: 'Combinar',
+        inputs: [
+            {
+                label: 'tabla A',
+            },
+            {
+                label: 'tabla B'
+            }
+        ],
+        outputs: [{
+            label: 'out',
+        }],
+        formElems: [
+            {
+                label: 'Columna de A',
+                type: 'select',
+                init: 'mergeSelect',
+            },
+            {
+                label: 'Columna de B',
+                type: 'select',
+                init: 'mergeSelect',
+            }
+        ],
+        evaluator: 'merge',
+    },
     load: {
-        label: 'Load',
+        label: 'Cargar Excel',
         inputs: [],
         outputs: [{
             label: 'out',
         }],
         formElems: [
             {
-                label: 'FileAddress',
+                label: 'Archivo',
                 type: 'file',
+                init: 'none',
             }
         ],
         evaluator: 'table',
     },
     num: {
-        label: 'Number',
+        label: 'Número',
         inputs: [],
         outputs: [{
             label: 'out',
         }],
         formElems: [
             {
-                label: 'Number',
+                label: 'Número',
                 type: 'Num',
+                init: 'num',
             }
         ],
         evaluator: 'num',
     },
     sum: {
-        label: 'Sum',
+        label: 'Suma',
         inputs: [
             {
-                label: 'in a',
+                label: 'a',
             },
             {
-                label: 'in b'
+                label: 'b'
             }
         ],
         outputs: [
             {
-                label: 'out',
+                label: 'c',
             }
         ],
         formElems: [],
         evaluator: 'add',
     },
     eval: {
-        label: 'Evaluation',
+        label: 'Vista Previa',
         inputs: [{label: 'in'}],
         outputs: [],
         formElems: [
             {
                 label: 'preview...',
                 type: 'eval',
+                init: 'none',
             }
         ],
         evaluator: 'eval',

@@ -13,7 +13,8 @@ export const mutations = {
     },
 
     deleteInput(state, input) {
-        mutations.disconnect(state, input);
+        if (input.connectedOutput)
+            mutations.disconnect(state, input);
         let inputs = input.node.inputs;
         inputs.splice(inputs.indexOf(input), 1);
     },
@@ -81,14 +82,14 @@ export const mutations = {
     },
 
     deleteNode(state, node) {
+        while (node.formElems.length > 0) {
+            mutations.deleteFormElem(state, node.formElems[0]);
+        }
         while (node.inputs.length > 0) {
             mutations.deleteInput(state, node.inputs[0]);
         }
         while (node.outputs.length > 0) {
             mutations.deleteOutput(state, node.outputs[0]);
-        }
-        while (node.formElems.length > 0) {
-            mutations.deleteFormElem(state, node.formElems[0]);
         }
         state.nodes = state.nodes.filter(n => node.id !== n.id);
     },
@@ -98,8 +99,7 @@ export const mutations = {
         output.connectedInputs.push(input);
         state.connections.push({input: input, output: output});
         mutations.setDirty(state, input.node);
-        mutations.evaluate(state, output.node);
-        mutations.evaluate(state, output.node);
+        mutations.evaluate(state, input.node);
     },
 
     disconnect(state, input) {
@@ -138,10 +138,10 @@ export const mutations = {
         let formValues = node.formElems.map((formElem) => {
             return formElem.value;
         });
+
         let ev = evaluators[node.blueprint.evaluator];
 
         let success = () => {
-            console.log(node.value);
             node.outputs.map(output => {
                 if (output.connectedInputs.length > 0)
                     output.connectedInputs.map(input => {
@@ -156,6 +156,9 @@ export const mutations = {
     },
 
     setDirty(state, node) {
+        node.formElems.forEach((formElem, index) => {
+            mutations.initFormElem(state, {formElem, index});
+        });
         if (node.value) {
             //update
             node.value = null;
@@ -172,5 +175,9 @@ export const mutations = {
         formElem.value = value;
         mutations.setDirty(state, formElem.node);
         mutations.evaluate(state, formElem.node);
+    },
+    initFormElem(state, {formElem, index}) {
+        initiators[formElem.blueprint.init](formElem, index, options => {
+        });
     },
 };

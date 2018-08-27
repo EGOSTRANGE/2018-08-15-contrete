@@ -5,5 +5,4 @@ export const state = {
     outputId: 0,
     formElemId: 0,
     connections: [],
-    connectionId: 0,
 };

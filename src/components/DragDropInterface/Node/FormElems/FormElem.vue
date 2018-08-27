@@ -4,7 +4,9 @@
             {{ formElem.blueprint.label }}
         </label>
         <component :is="FormElemType"
-                   :formElem="formElem">
+                   :formElem="formElem"
+                   :index="index"
+                   @change="Change">
         </component>
     </div>
 </template>
@@ -14,19 +16,32 @@
     import EvalElem from './EvalElems/EvalElem';
     import TextElem from './TextElem';
     import FileElem from './FileElem';
+    import SelectElem from './SelectElem';
+    import {mapActions} from 'vuex';
 
     export default {
-        props: ['formElem'],
+        props: ['formElem', 'index'],
+        methods: {
+            ...mapActions(['initFormElem', 'updateFormElem']),
+            Change(e) {
+                console.log(e);
+                this.updateFormElem({formElem: this.formElem, value: e});
+            },
+        },
         computed: {
             FormElemType() {
                 return String.prototype.concat(this.formElem.blueprint.type[0].toUpperCase(), this.formElem.blueprint.type.substring(1), 'Elem');
             }
         },
+        // beforeMount() {
+        //     this.initFormElem({formElem: this.formElem, index: this.index});
+        // },
         components: {
             NumElem,
             EvalElem,
             TextElem,
             FileElem,
+            SelectElem,
         }
     }
 </script>
@@ -35,15 +50,11 @@
     .mono-field {
         display: flex;
         flex-direction: column;
-        margin: 5px 0;
+        margin: 5px 0 0 0;
         position: relative;
     }
 
-    .mono-field:first-child {
-        margin: 0 0 5px 0
-    }
-
-    .mono-field:first-child {
+    .mono-field:last-child {
         margin: 5px 0 0 0
     }
 

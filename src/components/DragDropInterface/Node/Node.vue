@@ -3,42 +3,45 @@
         <div class="node"
              :key="'node-'+node.id"
              :class="{dragged:dragged}"
-             :style="{left: offset.x+'px', top: offset.y+'px'}">
-            <div class="node-bar draggable-area"
-                 @click.stop="DragDrop">
-                <span>{{ node.blueprint.label }}</span>
-                <btn material="transparent"
-                     @click.stop="Delete">
-                    <icon-close class="small"></icon-close>
-                </btn>
-            </div>
-            <div class="node-body">
-                <div v-if="node.outputs.length>0" class="node-output-area">
-                    <ul>
-                        <node-output v-for="output in node.outputs"
-                                     :output="output"
-                                     :key="output.id">
-                        </node-output>
-                    </ul>
+             :style="{transform:'translate('+offset.x+'px'+', ' + offset.y+'px)'}">
+            <div class="node-content">
+                <div class="node-bar draggable-area"
+                     @click.stop="DragDrop">
+                    <span>{{ node.blueprint.label }}</span>
+                    <btn material="transparent"
+                         @click.stop="Delete">
+                        <icon-close class="small"></icon-close>
+                    </btn>
                 </div>
+                <div class="node-body">
+                    <div v-if="node.outputs.length>0" class="node-output-area">
+                        <ul>
+                            <node-output v-for="output in node.outputs"
+                                         :output="output"
+                                         :key="output.id">
+                            </node-output>
+                        </ul>
+                    </div>
 
-                <div v-if="node.formElems.length>0" class="node-form-area">
-                    <ul>
-                        <li v-for="formElem in node.formElems">
-                            <form-elem :form-elem="formElem"
-                                       :key="formElem.id">
-                            </form-elem>
-                        </li>
-                    </ul>
-                </div>
+                    <div v-if="node.formElems.length>0" class="node-form-area">
+                        <ul>
+                            <li v-for="(formElem,index) in node.formElems">
+                                <form-elem :form-elem="formElem"
+                                           :index="index"
+                                           :key="formElem.id">
+                                </form-elem>
+                            </li>
+                        </ul>
+                    </div>
 
-                <div v-if="node.inputs.length>0" class="node-input-area">
-                    <ul>
-                        <node-input v-for="input in node.inputs"
-                                    :input="input"
-                                    :key="input.id">
-                        </node-input>
-                    </ul>
+                    <div v-if="node.inputs.length>0" class="node-input-area">
+                        <ul>
+                            <node-input v-for="input in node.inputs"
+                                        :input="input"
+                                        :key="input.id">
+                            </node-input>
+                        </ul>
+                    </div>
                 </div>
             </div>
             {{node.state}}
@@ -69,10 +72,6 @@
         },
         methods: {
             ...mapActions(['update', 'deleteNode']),
-            Update() {
-                console.log(this.node);
-                this.update(this.node);
-            },
             DragDrop(event) {
                 let rect = this.$el.getBoundingClientRect();
                 this.dragOffset.x = event.x - rect.left;
@@ -128,19 +127,30 @@
 
 <style>
     .node {
-        transform-origin: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .node-content {
         min-width: 100px;
         display: block;
-        position: absolute;
+        position: relative;
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .2);
-        transition: box-shadow .2s, transform .2s;
+        transition: box-shadow .2s, transform .2s, border .2s;
         transform: scale(1);
+        border-radius: 3px;
+        border: 1px solid rgba(230, 230, 230, 0);
     }
 
     .node.dragged {
-        box-shadow: 0 15px 10px -5px rgba(0, 0, 0, .2);
-        transform: scale(1.025);
         z-index: 1;
+    }
+
+    .node.dragged .node-content {
+        box-shadow: 0 15px 10px -5px rgba(0, 0, 0, .2);
+        /*transform: translateY(-5px);*/
+        border: 1px solid rgba(230, 230, 230, 1);
     }
 
     .node-bar {

@@ -1,7 +1,42 @@
 import XLSX from 'xlsx/xlsx';
 import Sheet2JSONOpt from 'xlsx/xlsx';
-
+//combinar:merge
+//groupby:agrupar por
+let copyBody = (body) => {
+    return body.map(row => {
+        return row.map(elem => {
+            return elem;
+        })
+    });
+};
 export default {
+    merge: (inputsEvaluations, formElemsValues, node, outputIndex, success, fail) => {
+        node.state = 'wait';
+        let dataset_0 = inputsEvaluations[0].value;
+        let dataset_1 = inputsEvaluations[1].value;
+
+        let columnIndex_0 = formElemsValues[0];
+        let columnIndex_1 = formElemsValues[1];
+        let body = [];
+
+        dataset_0.body.forEach(row_0 => {
+            dataset_1.body.forEach(row_1 => {
+                if (row_0[columnIndex_0] === row_1[columnIndex_1]) {
+                    body.push(row_0.concat(row_1));
+                }
+            });
+        });
+        let headers = dataset_0.headers.concat(dataset_1.headers);
+        node.value = {
+            type: 'table',
+            value: {
+                headers,
+                body
+            }
+        };
+        node.state = 'ok';
+        success();
+    },
     table: (inputsEvaluations, formElemsValues, node, outputIndex, success, fail) => {
         if (!formElemsValues[0]) {
             fail();
@@ -14,11 +49,11 @@ export default {
             let sheets = [];
             wb.SheetNames.forEach(function (sheetName) {
                 let rowObj = XLSX.utils.sheet_to_json(wb.Sheets[sheetName]);
-                let header = [];
+                let headers = [];
                 let rows = [];
 
                 for (let prop in rowObj[0])
-                    header.push(prop);
+                    headers.push(prop);
 
                 rowObj.map(elem => {
                     let row = [];
@@ -27,7 +62,7 @@ export default {
                     }
                     rows.push(row);
                 });
-                sheets.push({header, rows});
+                sheets.push({headers, body: rows});
             });
             node.state = 'ok';
             node.value = {type: 'table', value: sheets[0]};

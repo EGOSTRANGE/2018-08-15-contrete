@@ -1,7 +1,7 @@
 <template>
     <input type="number"
            :id="'form-elem-'+formElem.id+'-in-node-'+formElem.node.id"
-           v-model="formElem.value"
+           :value="formElem.value"
            @change="Change">
 </template>
 
@@ -9,11 +9,7 @@
     import FormElemMixin from './Mixins/FormElemMixin';
 
     export default {
-        props: ['formElem'],
         mixins: [FormElemMixin],
-        beforeMount() {
-            this.formElem.value = 0;
-        },
     }
 </script>
 

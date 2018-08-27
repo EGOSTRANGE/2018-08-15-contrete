@@ -9,9 +9,7 @@
 </template>
 
 <script>
-    import {bus} from '../../../../../main';
     import Btn from '../../../../Shared/Btn';
-    import {mapActions} from 'vuex';
     import TextEval from './EvalSubelements/TextEval';
     import NumEval from './EvalSubelements/TextEval';
     import TableEval from './EvalSubelements/TableEval';

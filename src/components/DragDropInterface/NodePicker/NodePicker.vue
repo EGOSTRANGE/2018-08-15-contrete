@@ -23,7 +23,6 @@
 
 <script>
     import blueprints from '../../../nodeBehaviours/blueprints';
-    import {bus} from '../../../main';
     import StylButton from '../../Shared/Btn';
     import IconClose from '../../Shared/IconClose';
     import IconBurger from '../../Shared/IconBurger';
