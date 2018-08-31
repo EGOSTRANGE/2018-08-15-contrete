@@ -1,6 +1,68 @@
 import evaluators from '../../../nodeBehaviours/evaluators';
-import initiators from '../../../nodeBehaviours/initiators';
+// import initiators from '../../../nodeBehaviours/initiators';
 
+const initFormElem = (state, {formElem, index}) => {
+    if (formElem.blueprint.init)
+        formElem.blueprint.init(formElem, index);
+};
+const setDirty = (state, node) => {
+    node.formElems.forEach((formElem, index) => {
+        initFormElem(state, {formElem, index});
+    });
+    if (node.value) {
+        //update
+        node.value = null;
+        node.state = 'fail';
+        //spread the word
+        node.outputs.map(output => {
+            output.connectedInputs.forEach(nextInput => {
+                setDirty(state, nextInput.node);
+            });
+        });
+    }
+};
+const evaluate = (state, node) => {
+    if (node.state === 'ok') return;
+
+    let connectedNodesValues = [];
+    let st = 'ok';
+    node.inputs.find(input => {
+        if (!input.connectedOutput) {
+            st = 'fail';
+            return true;
+        }
+        let connectedNode = input.connectedOutput.node;
+        if (connectedNode.state !== 'ok') {
+            st = connectedNode.state;
+            return true;
+        }
+        connectedNodesValues.push(connectedNode.value);
+
+        return false;
+    });
+    if (st !== 'ok')
+        return;
+
+    let formValues = node.formElems.map((formElem) => {
+        return formElem.value;
+    });
+
+    let ev = evaluators[node.blueprint.evaluator];
+
+    let success = () => {
+        node.outputs.map(output => {
+            if (output.connectedInputs.length > 0)
+                output.connectedInputs.map(input => {
+                    setDirty(state, input.node);
+                    evaluate(state, input.node);
+                });
+        });
+    };
+    let fail = () => {
+        setDirty(state, node);
+    };
+    ev(connectedNodesValues, formValues, node, 0, success, fail);
+};
 export const mutations = {
     createInput(state, blueprint) {
         return {
@@ -36,11 +98,14 @@ export const mutations = {
         outputs.splice(outputs.indexOf(output), 1);
     },
     createFormElem(state, blueprint) {
-        return {
+        let formElem = {
             value: null,
             id: state.formElemId++,
             blueprint,
         };
+        if (blueprint.init)
+            blueprint.init(formElem);
+        return formElem;
     },
     deleteFormElem(state, formElem) {
         let formElems = formElem.node.formElems;
@@ -98,8 +163,8 @@ export const mutations = {
         input.connectedOutput = output;
         output.connectedInputs.push(input);
         state.connections.push({input: input, output: output});
-        mutations.setDirty(state, input.node);
-        mutations.evaluate(state, input.node);
+        setDirty(state, input.node);
+        evaluate(state, input.node);
     },
 
     disconnect(state, input) {
@@ -111,73 +176,12 @@ export const mutations = {
             inputs.splice(inputs.indexOf(input), 1);
             input.connectedOutput = null;
         }
-        mutations.setDirty(state, input.node);
-    },
-    evaluate(state, node) {
-        if (node.state === 'ok') return;
-
-        let connectedNodesValues = [];
-        let st = 'ok';
-        node.inputs.find(input => {
-            if (!input.connectedOutput) {
-                st = 'fail';
-                return true;
-            }
-            let connectedNode = input.connectedOutput.node;
-            if (connectedNode.state !== 'ok') {
-                st = connectedNode.state;
-                return true;
-            }
-            connectedNodesValues.push(connectedNode.value);
-
-            return false;
-        });
-        if (st !== 'ok')
-            return;
-
-        let formValues = node.formElems.map((formElem) => {
-            return formElem.value;
-        });
-
-        let ev = evaluators[node.blueprint.evaluator];
-
-        let success = () => {
-            node.outputs.map(output => {
-                if (output.connectedInputs.length > 0)
-                    output.connectedInputs.map(input => {
-                        mutations.evaluate(state, input.node);
-                    });
-            });
-        };
-        let fail = () => {
-            mutations.setDirty(state, node);
-        };
-        ev(connectedNodesValues, formValues, node, 0, success, fail);
+        setDirty(state, input.node);
     },
 
-    setDirty(state, node) {
-        node.formElems.forEach((formElem, index) => {
-            mutations.initFormElem(state, {formElem, index});
-        });
-        if (node.value) {
-            //update
-            node.value = null;
-            node.state = 'fail';
-            //spread the word
-            node.outputs.map(output => {
-                output.connectedInputs.forEach(nextInput => {
-                    mutations.setDirty(state, nextInput.node);
-                });
-            });
-        }
-    },
     updateFormElem(state, {formElem, value}) {
         formElem.value = value;
-        mutations.setDirty(state, formElem.node);
-        mutations.evaluate(state, formElem.node);
-    },
-    initFormElem(state, {formElem, index}) {
-        initiators[formElem.blueprint.init](formElem, index, options => {
-        });
+        setDirty(state, formElem.node);
+        evaluate(state, formElem.node);
     },
 };

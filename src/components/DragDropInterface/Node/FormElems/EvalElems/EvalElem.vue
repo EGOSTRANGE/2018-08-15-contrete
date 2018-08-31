@@ -3,8 +3,6 @@
         <component v-if="formElem.node.value!=null"
                    :is="formElem.node.value.type+'Eval'"
                    :value="formElem.node.value.value"></component>
-        <!--<br>-->
-        <!--<btn @click.stop="Evaluate">Evaluar</btn>-->
     </div>
 </template>
 
@@ -17,9 +15,6 @@
 
     export default {
         props: ['formElem'],
-        data() {
-            return {};
-        },
         computed: {
             FormElemType() {
                 return String.prototype.concat(this.formElem.node.value.type[0].toUpperCase(),

@@ -24,7 +24,9 @@
 
 <style>
     .table-container {
-        position: relative;
+        position: absolute;
+        top: 65px;
+        left: 15px;
         max-width: 500px;
         max-height: 500px;
         overflow: auto;

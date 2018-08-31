@@ -1,16 +1,17 @@
 <template>
     <div class="drag-box"
          @mousemove="UpdateMousePosition">
-        <draw-box :connections="connections"
-                  :showHotConnection="draggingOutput || draggingInput"
-                  :hotConnection="hotConnection"
-                  @drop="Drop">
-        </draw-box>
+
         <node v-for="node in nodes"
               :node="node"
               :mousePosition="mousePosition"
               :key="node.id">
         </node>
+        <draw-box :connections="connections"
+                  :showHotConnection="draggingOutput || draggingInput"
+                  :hotConnection="hotConnection"
+                  @drop="Drop">
+        </draw-box>
         <node-picker></node-picker>
         <message-box></message-box>
     </div>
@@ -46,13 +47,14 @@
         computed: {
             ...mapGetters([
                 'nodes',
-                'connections'
+                'connections',
             ]),
         },
         methods: {
             ...mapActions([
                 'connect',
                 'disconnect',
+                'initFormElem',
             ]),
             UpdateMousePosition(event) {
                 this.dummyPlug.position.x = event.pageX;
@@ -149,8 +151,9 @@
             });
             //nodeOutputs
             bus.$on('outputClick', output => {
-                if (this.draggingInput)
+                if (this.draggingInput) {
                     this.Connect();
+                }
                 else if (!this.draggingOutput)
                     this.DragOutput(output);
             });
@@ -171,8 +174,7 @@
 
 <style>
     .drag-box {
-        position: fixed;
-        width: 100vw;
-        height: 100vh;
+        width: 5000px;
+        height: 5000px;
     }
 </style>

@@ -5,7 +5,6 @@
         </label>
         <component :is="FormElemType"
                    :formElem="formElem"
-                   :index="index"
                    @change="Change">
         </component>
     </div>
@@ -20,11 +19,10 @@
     import {mapActions} from 'vuex';
 
     export default {
-        props: ['formElem', 'index'],
+        props: ['formElem'],
         methods: {
-            ...mapActions(['initFormElem', 'updateFormElem']),
+            ...mapActions(['updateFormElem']),
             Change(e) {
-                console.log(e);
                 this.updateFormElem({formElem: this.formElem, value: e});
             },
         },
@@ -33,9 +31,6 @@
                 return String.prototype.concat(this.formElem.blueprint.type[0].toUpperCase(), this.formElem.blueprint.type.substring(1), 'Elem');
             }
         },
-        // beforeMount() {
-        //     this.initFormElem({formElem: this.formElem, index: this.index});
-        // },
         components: {
             NumElem,
             EvalElem,
@@ -60,11 +55,21 @@
 
     input {
         border-radius: 3px;
+        border: solid 1px lightgray;
+        font-size: 15px;
+        color: rgb(50, 50, 50);
+        width: 80px;
+        padding: 1px;
+    }
+
+    select {
+        width: 80px;
+        border-radius: 3px;
         border: solid 1px grey;
         font-size: 15px;
         color: rgb(50, 50, 50);
-        padding: 0 3px;
-        width: 80px;
+        /*padding: 0 3px;*/
+        padding: 1px;
     }
 
     label {

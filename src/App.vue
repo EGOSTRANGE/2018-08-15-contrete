@@ -23,12 +23,22 @@
     @import 'style/vars.scss';
 
     #app {
-        position: fixed;
-        width: 100vw;
-        height: 100vh;
+        overflow: scroll;
+        top: 0;
+        left: 0;
+        right: -17px;
+        bottom: -17px;
+        position: absolute;
+        /*position: fixed;*/
+        /*width: 100vw;*/
+        /*height: 100vh;*/
     }
 
     body {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        position: fixed;
         font-family: Calibri;
         font-size: 20px;
         background-color: rgb(50, 50, 50);
@@ -39,6 +49,7 @@
         margin: 0;
         padding: 0;
         list-style: none;
+        font-size: medium;
     }
 
     span {
@@ -46,7 +57,7 @@
     }
 
     .small span {
-        font-size: calc(8px + 1vmin);
+        font-size: small;
     }
 
     .icon {

@@ -4,7 +4,8 @@
              :key="'node-'+node.id"
              :class="{dragged:dragged}"
              :style="{transform:'translate('+offset.x+'px'+', ' + offset.y+'px)'}">
-            <div class="node-content">
+            <div class="node-content"
+                 :style="{'transform-origin':(offset.x - dragOffset.x)+'px '+(offset.y-dragOffset.y)+'px'}">
                 <div class="node-bar draggable-area"
                      @click.stop="DragDrop">
                     <span>{{ node.blueprint.label }}</span>
@@ -25,9 +26,8 @@
 
                     <div v-if="node.formElems.length>0" class="node-form-area">
                         <ul>
-                            <li v-for="(formElem,index) in node.formElems">
+                            <li v-for="formElem in node.formElems">
                                 <form-elem :form-elem="formElem"
-                                           :index="index"
                                            :key="formElem.id">
                                 </form-elem>
                             </li>
@@ -64,8 +64,8 @@
             return {
                 inputList: [],
                 outputList: [],
-                dragOffset: {x: 0, y: 0},
-                offset: {x: 150, y: 150},
+                dragOffset: {x: 30, y: 30},
+                offset: {x: 30, y: 30},
                 dragged: false,
                 evaluation: 0,
             };
@@ -73,14 +73,14 @@
         methods: {
             ...mapActions(['update', 'deleteNode']),
             DragDrop(event) {
-                let rect = this.$el.getBoundingClientRect();
-                this.dragOffset.x = event.x - rect.left;
-                this.dragOffset.y = event.y - rect.top;
+                this.dragOffset.x = event.clientX;
+                this.dragOffset.y = event.clientY;
 
                 if (this.dragged)
                     this.Drop();
                 else
                     this.Drag();
+                console.log(this.dragOffset.x + ', ' + this.dragOffset.y);
             },
             Drag() {
                 this.dragged = true;
@@ -118,8 +118,8 @@
             IconClose,
         },
         mounted() {
-            this.dragOffset.x = 15;
-            this.dragOffset.y = 10;
+            this.offset.x = this.mousePosition.x - this.dragOffset.x;
+            this.offset.y = this.mousePosition.y - this.dragOffset.y;
             this.Drag();
         }
     }
@@ -140,7 +140,7 @@
         transition: box-shadow .2s, transform .2s, border .2s;
         transform: scale(1);
         border-radius: 3px;
-        border: 1px solid rgba(230, 230, 230, 0);
+        border: 1px solid rgba(0, 0, 0, .125);
     }
 
     .node.dragged {
@@ -148,24 +148,24 @@
     }
 
     .node.dragged .node-content {
-        box-shadow: 0 15px 10px -5px rgba(0, 0, 0, .2);
-        /*transform: translateY(-5px);*/
-        border: 1px solid rgba(230, 230, 230, 1);
+        box-shadow: 0 15px 12px -7px rgba(0, 0, 0, .2);
+        /*transform: scale(1.025);*/
     }
 
     .node-bar {
         position: relative;
         display: flex;
         justify-content: space-between;
-        background: rgba(100, 100, 100, .75);
+        background: rgb(100, 100, 100);
         border-radius: 3px 3px 0 0;
         padding: 3px 3px 3px 10px;
         font-weight: bold;
         cursor: move;
+        font-size: 24px;
     }
 
     .node-body {
-        background: rgba(180, 180, 180, .75);
+        background: rgba(160, 160, 160, .8);
         border-radius: 0 0 3px 3px;
     }
 

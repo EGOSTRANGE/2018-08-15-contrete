@@ -1,12 +1,4 @@
-import {resolveNode} from '../../../nodeBehaviours/behaviours';
-
 export const actions = {
-    initFormElem({commit}, e) {
-        commit('initFormElem', e);
-    },
-    updateFormElem({commit}, e) {
-        commit('updateFormElem', e);
-    },
     createNode({commit}, blueprintKey) {
         commit('createNode', blueprintKey);
     },
@@ -14,12 +6,15 @@ export const actions = {
         commit('deleteNode', node);
     },
     connect({commit}, plugs) {
-        commit('connect', plugs)
+        commit('connect', plugs);
     },
     disconnect({commit}, input) {
         commit('disconnect', input);
     },
     moveNode({commit}, e) {
         commit('moveNode', e);
+    },
+    updateFormElem({commit}, e) {
+        commit('updateFormElem', e);
     },
 };

@@ -1,7 +1,6 @@
 <template>
     <input type="text"
            :id="'form-elem-'+formElem.id+'-in-node-'+formElem.node.id"
-           v-model="formElem.value"
            @change="Change">
 </template>
 
